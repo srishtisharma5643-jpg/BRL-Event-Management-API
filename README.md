@@ -268,3 +268,12 @@ MongoDB is used as the database and Mongoose is used for database interaction.
 - Protected routes use authentication middleware.
 - `.env` is excluded from Git using `.gitignore`.
 - Passwords are never returned in the user profile response.
+## Environment Variables
+
+Create a `.env` file:
+
+JWT_SECRET=your_secret_key
+PORT=3000
+DATABASE_URL=mongodb://127.0.0.1:27017/brl_task_1
+
+Do not commit the `.env` file to GitHub.
