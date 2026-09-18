@@ -20,8 +20,7 @@ app.use("/events", eventRoutes);
 app.use("/auth", authRoutes);
 
 // MongoDB connection
-mongoose
-    .connect("mongodb://127.0.0.1:27017/brl_task_1")
+mongoose.connect(process.env.DATABASE_URL)
     .then(() => {
         console.log("MongoDB connected");
     })
@@ -30,6 +29,6 @@ mongoose
     });
 
 // Start server
-app.listen(3000, () => {
-    console.log("Server running on http://localhost:3000");
+app.listen(process.env.PORT, () => {
+    console.log(`Server running on http://localhost:${process.env.PORT}`);
 });
