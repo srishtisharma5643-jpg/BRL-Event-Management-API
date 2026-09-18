@@ -1,4 +1,6 @@
 const Event = require("../models/event");
+const mongoose = require("mongoose");
+
 
 const getEvents = async (req, res) => {
     try {
@@ -52,6 +54,12 @@ const getEvents = async (req, res) => {
 
 const getEvent = async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                message: "Invalid event ID"
+            });
+        }
+
         const event = await Event.findById(req.params.id);
 
         if (!event) {
@@ -60,7 +68,7 @@ const getEvent = async (req, res) => {
             });
         }
 
-        res.json(event);
+        res.status(200).json(event);
 
     } catch (error) {
         res.status(500).json({
@@ -72,7 +80,13 @@ const getEvent = async (req, res) => {
 
 const createEvent = async (req, res) => {
     try {
-        const { title, description, date, location, capacity } = req.body;
+        const {
+            title,
+            description,
+            date,
+            location,
+            capacity
+        } = req.body;
 
         if (
             title === undefined ||
@@ -124,29 +138,29 @@ const createEvent = async (req, res) => {
             });
         }
 
-        // 8. Check duplicate event
-const duplicateEvent = await Event.findOne({
-    title: title.trim(),
-    date: eventDate,
-    location: location.trim()
-});
+        // Check duplicate event
+        const duplicateEvent = await Event.findOne({
+            title: title.trim(),
+            date: eventDate,
+            location: location.trim()
+        });
 
-if (duplicateEvent) {
-    return res.status(409).json({
-        message: "Duplicate event already exists"
-    });
-}
+        if (duplicateEvent) {
+            return res.status(409).json({
+                message: "Duplicate event already exists"
+            });
+        }
 
-// 9. Create event
-const event = await Event.create({
-    ...req.body,
-    title: title.trim(),
-    description: description.trim(),
-    location: location.trim(),
-    date: eventDate
-});
+        // Create event
+        const event = await Event.create({
+            ...req.body,
+            title: title.trim(),
+            description: description.trim(),
+            location: location.trim(),
+            date: eventDate
+        });
 
-res.status(201).json(event);
+        res.status(201).json(event);
 
     } catch (error) {
         res.status(500).json({
@@ -158,6 +172,12 @@ res.status(201).json(event);
 
 const updateEvent = async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                message: "Invalid event ID"
+            });
+        }
+
         const event = await Event.findById(req.params.id);
 
         if (!event) {
@@ -194,8 +214,15 @@ const updateEvent = async (req, res) => {
     }
 };
 
+
 const deleteEvent = async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                message: "Invalid event ID"
+            });
+        }
+
         const event = await Event.findById(req.params.id);
 
         if (!event) {

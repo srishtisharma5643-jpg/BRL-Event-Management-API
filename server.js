@@ -1,7 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 
 const eventRoutes = require("./routes/eventRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -12,9 +14,10 @@ app.get("/", (req, res) => {
         message: "BRL Event Management API is running"
     });
 });
-
 // Event routes
 app.use("/events", eventRoutes);
+//auth routes
+app.use("/auth", authRoutes);
 
 // MongoDB connection
 mongoose
